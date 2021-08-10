@@ -4,5 +4,14 @@ I got tired of Adobe Fonts constantly deactivating fonts I was using in Figma, a
 
 Please don't use this for anything nefarious.
 
+## Building
+
+If you're not using Visual Studio, you can build a release EXE with the following ([.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) is required):
+
+```
+dotnet build --configuration Release
+dotnet publish -c Release -r win-x86 -p:PublishSingleFile=true --self-contained false
+```
+
 ---
 © 2021 Travis Spomer. [MIT license](License.txt).

@@ -6,6 +6,7 @@
     <Authors>Travis Spomer</Authors>
     <Product>Adobe Fonts Cache Tool</Product>
     <Copyright>© 2021 Travis Spomer</Copyright>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>
