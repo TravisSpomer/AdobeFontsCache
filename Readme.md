@@ -4,9 +4,17 @@ I got tired of Adobe Fonts constantly deactivating fonts I was using in Figma, a
 
 Please don't use this for anything nefarious. This tool isn't useful to you if you aren't an Adobe Creative Cloud subscriber.
 
+## Usage
+
+1. Install [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0)
+2. Run `AdobeFontsCache.exe` to extract the fonts to a folder on your desktop
+3. Feel free to deactivate all of your fonts, remove the Adobe Creative Cloud Desktop app, and then just install those fonts locally
+
+Enjoy your 480 MB of RAM savings by not having the CC app's 14 processes running!
+
 ## Building
 
-If you're not using Visual Studio, you can build a release EXE with the following ([.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) is required):
+If you're not using Visual Studio, you can build a release EXE with the following ([.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) is required):
 
 ```
 dotnet build --configuration Release
