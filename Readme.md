@@ -7,7 +7,7 @@ Please don't use this for anything nefarious. This tool isn't useful to you if y
 ## Usage
 
 1. Install [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0)
-2. Run `AdobeFontsCache.exe` to extract the fonts to a folder on your desktop
+2. Run [`AdobeFontsCache.exe`](https://github.com/TravisSpomer/AdobeFontsCache/releases) to extract the fonts to a folder on your desktop
 3. Feel free to deactivate all of your fonts, remove the Adobe Creative Cloud Desktop app, and then just install those fonts locally
 
 Enjoy your 480 MB of RAM savings by not having the CC app's 14 processes running!
