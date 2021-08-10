@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
@@ -10,22 +9,32 @@ Console.ResetColor();
 Console.WriteLine("by Travis Spomer (GitHub @TravisSpomer)");
 Console.WriteLine();
 
-WriteHeader("STEP 1: Cut a hole in the box");
+Console.ForegroundColor = ConsoleColor.Yellow;
+Console.WriteLine("STEP 1: Cut a hole in the box");
+Console.ResetColor();
+Console.WriteLine();
 if (Environment.OSVersion.Platform != PlatformID.Win32NT)
 {
-	WriteError("Sorry, this app is for Windows only. I don't know where to find these files for Mac OS.");
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine("Sorry, this app is for Windows only. I don't know where to find these files for Mac OS.");
+	Console.ResetColor();
 	return;
 }
 string destPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Adobe Fonts");
-Console.WriteLine("I'm gonna put your cached font files in:");
+Console.WriteLine("I'm gonna copy your font files to:");
 Console.WriteLine($"  {destPath}");
 
 Console.WriteLine();
-WriteHeader("STEP 2: Put your fonts in the box");
+Console.ForegroundColor = ConsoleColor.Yellow;
+Console.WriteLine("STEP 2: Put your fonts in the box");
+Console.ResetColor();
+Console.WriteLine();
 string adobeFontsRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Adobe\CoreSync\plugins\livetype");
 if (!Directory.Exists(adobeFontsRootPath))
 {
-	WriteError("Well shit.");
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine("Well shit.");
+	Console.ResetColor();
 	Console.WriteLine("I wasn't able to find your Adobe Fonts cache. Maybe...");
 	Console.WriteLine(" - You don't have the Adobe Creative Cloud app running?");
 	Console.WriteLine(" - You haven't synced any fonts in Adobe Fonts?");
@@ -55,13 +64,16 @@ foreach (var fontElement in fontList.Elements())
 	XContainer properties = fontElement.Element("properties")!;
 	if (properties.Element("owner")!.Value == "Self") continue;
 	string installState = properties.Element("installState")!.Value;
-	string fontFullName = properties.Element("fullName")!.Value;
-	string fontFamilyName = properties.Element("familyName")!.Value;
+	string fontFullName = properties.Element("fullName")!.Value.Trim();
+	string fontFamilyName = properties.Element("familyName")!.Value.Trim();
+	string? familyUrl = properties.Element("familyURL")?.Value;
 
 	string sourceFilename = Path.Combine(adobeFontsRootPath, installState == "OS" ? "r" : "w", fontID);
 	if (!File.Exists(sourceFilename))
 	{
-		WriteError($" - {fontFullName}: font file not found");
+		Console.ForegroundColor = ConsoleColor.Red;
+		Console.WriteLine($" - {fontFullName}: font file not found");
+		Console.ResetColor();
 		errorsCount++;
 		continue;
 	}
@@ -78,6 +90,17 @@ foreach (var fontElement in fontList.Elements())
 	{
 		attributes &= ~FileAttributes.Hidden;
 		File.SetAttributes(destFilename, attributes);
+	}
+
+	// Add links to Adobe Fonts if possible.
+	string linkFilename = Path.Combine(destFolder, $"Adobe Fonts license.url");
+	if (!File.Exists(linkFilename))
+		File.WriteAllText(linkFilename, $"[InternetShortcut]\r\nURL=https://helpx.adobe.com/fonts/using/font-licensing.html");
+	if (familyUrl != null)
+	{
+		linkFilename = Path.Combine(destFolder, $"Adobe Fonts - {fontFamilyName}.url");
+		if (!File.Exists(linkFilename))
+			File.WriteAllText(linkFilename, $"[InternetShortcut]\r\nURL={familyUrl}");
 	}
 
 	fontsFound++;
@@ -98,20 +121,3 @@ else
 }
 Console.ResetColor();
 Console.WriteLine();
-
-// ------------------------------------------------------------
-
-void WriteHeader(string headerText)
-{
-	Console.ForegroundColor = ConsoleColor.Yellow;
-	Console.WriteLine(headerText);
-	Console.ResetColor();
-	Console.WriteLine();
-}
-
-void WriteError(string errorText)
-{
-	Console.ForegroundColor = ConsoleColor.Red;
-	Console.WriteLine(errorText);
-	Console.ResetColor();
-}
