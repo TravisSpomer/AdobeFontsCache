@@ -72,6 +72,14 @@ foreach (var fontElement in fontList.Elements())
 	string destFilename = Path.Combine(destFolder, Path.ChangeExtension(fontFullName, "otf"));
 	File.Copy(sourceFilename, destFilename, overwrite: true);
 
+	// Unhide the file if necessary.
+	var attributes = File.GetAttributes(destFilename);
+	if ((attributes & FileAttributes.Hidden) != 0)
+	{
+		attributes &= ~FileAttributes.Hidden;
+		File.SetAttributes(destFilename, attributes);
+	}
+
 	fontsFound++;
 	Console.WriteLine($" - {fontFullName}");
 }
