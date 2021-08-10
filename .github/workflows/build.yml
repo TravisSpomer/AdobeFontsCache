@@ -10,13 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v2
-    - name: Setup .NET
+
+    - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+  
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
 
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Publish
+      run: dotnet publish -c Release -r win-x86 -p:PublishSingleFile=true --self-contained false
+      
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: AdobeFontsCache
+        path: bin/Release/net5.0/win-x86/publish/AdobeFontsCache.exe
